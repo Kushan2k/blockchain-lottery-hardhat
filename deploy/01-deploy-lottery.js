@@ -13,12 +13,11 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
     vrfAddress = await VRFMock.getAddress()
     const subidTX = await VRFMock.createSubscription()
+    // console.log(subidTX.value)
     const subREcipt = await subidTX.wait(1)
-    const t = await subREcipt.events
-    //TODO
-    //get the subid
-    console.log("sdfsdfsdfsdf  ", subidTX.provider)
-    // subid = subREcipt.events[0].args.subid
+
+    subid = subREcipt.logs[0]
+
     // await VRFMock.fundSubscription(subid, FUMDING_AMOUNT)
   } else {
     vrfAddress = chainData[network.config.chainId]["vrfCordinator"]
