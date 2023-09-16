@@ -11,18 +11,12 @@ from "@openzeppelin/contracts/access/Ownable.sol";
 // from "@chainlink/contracts/src/v0.8/AutomationCompatible.sol";
 
 
-//erros
 
-error Lottery__EntranceFees(string msg);
-error Lottery__FaildToTransfer(string msg);
-error Lottery_NotActive(string msg);
-error Lottery_Active(string msg);
-error Lottery__NotEnoughPlayers();
 
 contract Lottery is VRFConsumerBaseV2,Ownable{
 
     //state variables
-    address payable[] internal s_enties;
+    address payable[] public s_enties;
     VRFCoordinatorV2Interface internal immutable i_vrfInterface;
     address internal immutable i_owner;
     bytes32 internal immutable keyhash;
@@ -35,9 +29,17 @@ contract Lottery is VRFConsumerBaseV2,Ownable{
     uint256 public s_randomWord;
     uint256 internal immutable I_entrace_fee;
     LotteryState public isActive;
-    uint256 constant i_time_interval=100000;
+    uint256 constant public i_time_interval=100000;
     uint256 internal starttime;
- 
+
+    //erros
+
+    error Lottery__EntranceFees(string msg);
+    error Lottery__FaildToTransfer(string msg);
+    error Lottery_NotActive(string msg);
+    error Lottery_Active(string msg);
+    error Lottery__NotEnoughPlayers();
+    
 
     
 

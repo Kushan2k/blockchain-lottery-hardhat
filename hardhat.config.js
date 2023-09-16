@@ -25,8 +25,13 @@ module.exports = {
     deployer: {
       default: 0,
     },
+    tester: {
+      default: 1,
+    },
   },
   gasReporter: {
     enabled: true,
+    noColors: true,
+    outputFile: "gas report.txt",
   },
 }
