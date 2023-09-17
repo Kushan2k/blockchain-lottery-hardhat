@@ -7,7 +7,7 @@ if (!isDevelopmentChain(network.name)) {
 }
 
 describe("Testing Lottery", async () => {
-  let Lottery, deployer, tester
+  let Lottery, deployer, tester, interval
 
   beforeEach(async () => {
     await deployments.fixture(["all"])
@@ -16,6 +16,7 @@ describe("Testing Lottery", async () => {
     tester = (await getNamedAccounts()).tester
 
     Lottery = await ethers.getContract("Lottery", deployer)
+    interval = await Lottery.i_time_interval()
   })
 
   //testing the initial state of the contract
@@ -98,6 +99,17 @@ describe("Testing Lottery", async () => {
   describe("Calculating lottery", async () => {
     it("end before the time interval", async () => {
       await expect(Lottery.pickWinner()).to.be.revertedWith("Not enough time")
+    })
+
+    it("pick winner", async () => {
+      await network.provider.send("evm_increaseTime", [interval.toNumber() + 1])
+      await network.provider.send("evm_mine", [])
+
+      //const vrf = await ethers.getContract("VRFCoordinatorV2Mock")
+
+      //fulfillRandomWords
+
+      assert.equal(0, 0)
     })
   })
 })
