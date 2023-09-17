@@ -78,5 +78,22 @@ describe("Testing Lottery", async () => {
 
       expect(entry).to.be.equal(deployer)
     })
+
+    it("can enter different users", async () => {
+      const singers = await ethers.getSigners()
+      const fee = ethers.parseEther("0.01")
+      let l, i
+      for (i = 1; i < singers.length; i++) {
+        l = await Lottery.connect(singers[i])
+        await Lottery.enter({ value: fee })
+      }
+
+      const entires = await Lottery.getarr()
+
+      assert.equal(entires.toString(), singers.length - 1)
+    })
   })
+
+  //lottery end
+  describe("Calculating lottery", async () => {})
 })
