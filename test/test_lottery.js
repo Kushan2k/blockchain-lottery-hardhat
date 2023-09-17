@@ -95,5 +95,9 @@ describe("Testing Lottery", async () => {
   })
 
   //lottery end
-  describe("Calculating lottery", async () => {})
+  describe("Calculating lottery", async () => {
+    it("end before the time interval", async () => {
+      await expect(Lottery.pickWinner()).to.be.revertedWith("Not enough time")
+    })
+  })
 })

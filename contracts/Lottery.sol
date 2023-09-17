@@ -107,6 +107,8 @@ contract Lottery is VRFConsumerBaseV2,Ownable{
     function pickWinner() public onlyOwner{
         //call the requestRandomwords function here
 
+        require(block.timestamp-starttime>=i_time_interval,"Not enough time");
+
         requestRandomWords();
     }
 
