@@ -1,20 +1,16 @@
-import { ConnectButton } from "@web3uikit/web3";
-import { useMoralis } from "react-moralis";
+import {ConnectButton} from '@web3uikit/web3'
 
 
 export default function Navbar() {
 
-  const { Moralis, enableWeb3, isWeb3Enabled } = useMoralis()
-  
-  async function handelclick() {
-    enableWeb3()
-  }
+
 
   return (
-    <div style={{
+    <div className='container-fluid p-2' style={{
       display: 'flex',
       alignItems: 'center',
-      justifyContent:'space-between'
+      justifyContent: 'space-between',
+      paddingRight:20,
     }}>
       <ul style={{
         listStyleType: 'none',
@@ -29,8 +25,9 @@ export default function Navbar() {
         <li>Updates</li>
         
       </ul>
-      <button onClick={()=>handelclick()}>Connect</button>
-      {/* <ConnectButton /> */}
+      
+      
+      <ConnectButton />
 
     </div>
   )

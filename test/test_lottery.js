@@ -136,15 +136,10 @@ describe("Testing Lottery", () => {
       await network.provider.send("evm_increaseTime", [parseInt(interval) + 1])
       await network.provider.send("evm_mine", [])
 
-      const tx = await Lottery.pickWinner()
-      const recept = await tx.wait(1)
-
-      const reqid = recept.logs[1].args[0].toString()
-
       const VRF = await ethers.getContract("VRFCoordinatorV2Mock")
       const address = await Lottery.getAddress()
 
-      await new Promise((resolve, reject) => {
+      await new Promise(async (resolve, reject) => {
         Lottery.once("WinnerSelected", async function () {
           const entires = await Lottery.getarr()
           const winner = await Lottery.getLatestWinner()
@@ -169,6 +164,10 @@ describe("Testing Lottery", () => {
 
           resolve()
         })
+        const tx = await Lottery.pickWinner()
+        const recept = await tx.wait(1)
+
+        const reqid = recept.logs[1].args[0].toString()
         VRF.fulfillRandomWords(reqid, address)
       })
     })
