@@ -5,6 +5,7 @@ import App from "./App"
 import reportWebVitals from "./reportWebVitals"
 import { MoralisProvider } from "react-moralis"
 import "bootstrap/dist/css/bootstrap.css"
+import { NotificationProvider } from "@web3uikit/core"
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(
@@ -13,7 +14,9 @@ root.render(
       initializeOnMount={false}
       appId={"d2050fb8-afb9-4c6d-9efb-e0db4abce7f5"}
     >
-      <App />
+      <NotificationProvider>
+        <App />
+      </NotificationProvider>
     </MoralisProvider>
   </React.StrictMode>
 )
