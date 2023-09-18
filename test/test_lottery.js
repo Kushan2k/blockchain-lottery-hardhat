@@ -6,7 +6,7 @@ if (!isDevelopmentChain(network.name)) {
   describe.skip
 }
 
-describe("Testing Lottery", async () => {
+describe("Testing Lottery", () => {
   let Lottery, deployer, tester, interval
 
   beforeEach(async () => {
@@ -20,7 +20,7 @@ describe("Testing Lottery", async () => {
   })
 
   //testing the initial state of the contract
-  describe("Deployments", async () => {
+  describe("Deployments", () => {
     it("deployed", async () => {
       const Lottery_address = await Lottery.getAddress()
       const balance = await ethers.provider.getBalance(Lottery_address)
@@ -66,7 +66,7 @@ describe("Testing Lottery", async () => {
   })
 
   //test the entrance of the lottery
-  describe("Testing the entries", async () => {
+  describe("Testing the entries", () => {
     it("can not enter without payment", async () => {
       await expect(Lottery.enter()).to.be.reverted
     })
@@ -96,20 +96,81 @@ describe("Testing Lottery", async () => {
   })
 
   //lottery end
-  describe("Calculating lottery", async () => {
+  describe("Calculating lottery", () => {
+    beforeEach(async () => {
+      const accounts = await ethers.getSigners()
+      const fees = ethers.parseEther("0.01")
+      for (let i = 1; i < accounts.length; i++) {
+        let l = Lottery.connect(accounts[i])
+        await l.enter({ value: fees })
+        // console.log(
+        //   `account ${accounts[i].address} / balance ${ethers.formatEther(
+        //     await ethers.provider.getBalance(accounts[i])
+        //   )}`
+        // )
+      }
+    })
+
     it("end before the time interval", async () => {
       await expect(Lottery.pickWinner()).to.be.revertedWith("Not enough time")
     })
 
-    it("pick winner", async () => {
-      await network.provider.send("evm_increaseTime", [interval.toNumber() + 1])
+    it("confirm entries", async () => {
+      const entires = await Lottery.getarr()
+
+      assert.equal(entires.toString(), "19")
+    })
+
+    it("when lottery is picking winner state is calculating", async () => {
+      await network.provider.send("evm_increaseTime", [parseInt(interval) + 1])
       await network.provider.send("evm_mine", [])
 
-      //const vrf = await ethers.getContract("VRFCoordinatorV2Mock")
+      await Lottery.pickWinner()
 
-      //fulfillRandomWords
+      const state = await Lottery.getState()
 
-      assert.equal(0, 0)
+      assert.equal(state, "2")
+    })
+
+    it("pick winner/reset entires/contact balance is 0", async () => {
+      await network.provider.send("evm_increaseTime", [parseInt(interval) + 1])
+      await network.provider.send("evm_mine", [])
+
+      const tx = await Lottery.pickWinner()
+      const recept = await tx.wait(1)
+
+      const reqid = recept.logs[1].args[0].toString()
+
+      const VRF = await ethers.getContract("VRFCoordinatorV2Mock")
+      const address = await Lottery.getAddress()
+
+      await new Promise((resolve, reject) => {
+        Lottery.once("WinnerSelected", async function () {
+          const entires = await Lottery.getarr()
+          const winner = await Lottery.getLatestWinner()
+          const netstate = await Lottery.getState()
+          const contractBalance = await ethers.provider.getBalance(address)
+
+          const prevWiners = await Lottery.getLatestWinner()
+
+          //random number generated
+          const randomword = await Lottery.s_randomWord()
+
+          assert(prevWiners > 0)
+          assert.equal(netstate.toString(), "0")
+          assert.equal(entires.toString(), "0")
+          assert.equal(contractBalance.toString(), "0")
+
+          const nb = await ethers.provider.getBalance(winner)
+
+          console.log(
+            `winner is ${winner} /new balance ${ethers.formatEther(nb)}`
+          )
+
+          resolve()
+        })
+        VRF.fulfillRandomWords(reqid, address)
+      })
     })
   })
 })
