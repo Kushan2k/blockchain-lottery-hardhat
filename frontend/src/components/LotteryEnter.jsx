@@ -100,6 +100,12 @@ export default function LotteryEnter() {
                         },
                         onError: (er) => {
                           console.log(er)
+                          dispatch({
+                            position: 'topR',
+                            type: 'error',
+                            title: "error",
+                            message:er.message
+                          })
                         },
 
                       }

@@ -7,6 +7,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   const { deployer } = await getNamedAccounts()
 
   let vrfAddress, keyhash, subid, gassLimit
+  console.log(network.config.chainId)
 
   if (isDevelopmentChain(network.name)) {
     const VRFMock = await ethers.getContract("VRFCoordinatorV2Mock", deployer)

@@ -8,14 +8,16 @@ require("@nomicfoundation/hardhat-chai-matchers")
 
 const SEPOLIA_ACCOUNT_1 = process.env.PRIVATE_KEY_ACCOUNT_1
 const SEPOLIA_ACCOUNT_2 = process.env.PRIVATE_KEY_ACCOUNT_2
+const INFURA_API_KEY = process.env.INFURA_API_KEY
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.19",
   networks: {
     sepolia: {
-      url: "",
+      url: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
       accounts: [SEPOLIA_ACCOUNT_1, SEPOLIA_ACCOUNT_2],
+      chainId: 11155111,
     },
     hardhat: {
       chainId: 1337,
