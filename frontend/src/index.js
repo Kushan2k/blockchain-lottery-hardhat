@@ -12,7 +12,7 @@ root.render(
   <React.StrictMode>
     <MoralisProvider
       initializeOnMount={false}
-      appId={"d2050fb8-afb9-4c6d-9efb-e0db4abce7f5"}
+      appId={process.env.REACT_APP_MORALIS_KEY}
     >
       <NotificationProvider>
         <App />
