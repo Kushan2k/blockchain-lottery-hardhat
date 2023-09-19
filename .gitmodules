@@ -1,0 +1,3 @@
+[submodule "blockchain-lottery-frontend-react"]
+	path = blockchain-lottery-frontend-react
+	url = https://github.com/Kushan2k/blockchain-lottery-frontend-react.git
