@@ -13,7 +13,10 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   const lottery_address = await Lottery.getAddress()
 
   const address = JSON.parse(
-    fs.readFileSync("./frontend/src/constants/address.json", "utf8")
+    fs.readFileSync(
+      "./blockchain-lottery-frontend-react/src/constants/address.json",
+      "utf8"
+    )
   )
 
   if (network.config.chainId.toString() in address) {
@@ -25,12 +28,12 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   }
 
   fs.writeFileSync(
-    "./frontend/src/constants/address.json",
+    "./blockchain-lottery-frontend-react/src/constants/address.json",
     JSON.stringify(address)
   )
 
   fs.writeFileSync(
-    "./frontend/src/constants/abi.json",
+    "./blockchain-lottery-frontend-react/src/constants/abi.json",
     Lottery.interface.formatJson()
   )
 }
